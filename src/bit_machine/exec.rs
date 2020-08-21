@@ -96,7 +96,7 @@ impl BitMachine {
 
     /// Move the cursor of the current write frame forward by
     /// a specified number of bits
-    fn skip(&mut self, n: usize) {
+    pub(crate) fn skip(&mut self, n: usize) {
         let idx = self.write.len() - 1;
         self.write[idx].fwd(n);
     }
