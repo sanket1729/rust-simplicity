@@ -97,6 +97,10 @@ impl BitMachine {
     /// Move the cursor of the current write frame forward by
     /// a specified number of bits
     pub(crate) fn skip(&mut self, n: usize) {
+        // short circuit n = 0
+        if n == 0 {
+            return;
+        }
         let idx = self.write.len() - 1;
         self.write[idx].fwd(n);
     }
@@ -104,6 +108,10 @@ impl BitMachine {
     /// Copy a specified number of bits from the current read
     /// frame to the current write frame
     fn copy(&mut self, n: usize) {
+        // short circuit n = 0
+        if n == 0 {
+            return;
+        }
         let widx = self.write.len() - 1;
         let ridx = self.read.len() - 1;
         self.write[widx].copy_from(&self.read[ridx], n);
@@ -111,12 +119,20 @@ impl BitMachine {
 
     /// Move the cursor of the current read frame forward a number of bits
     fn fwd(&mut self, n: usize) {
+        // short circuit n = 0
+        if n == 0 {
+            return;
+        }
         let idx = self.read.len() - 1;
         self.read[idx].fwd(n);
     }
 
     /// Move the cursor of the current read frame back a number of bits
     fn back(&mut self, n: usize) {
+        // short circuit n = 0
+        if n == 0 {
+            return;
+        }
         let idx = self.read.len() - 1;
         self.read[idx].back(n);
     }
