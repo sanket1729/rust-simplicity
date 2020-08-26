@@ -53,6 +53,10 @@ impl extension::Jet for DummyNode {
         match *self {}
     }
 
+    fn wmr(&self) -> cmr::Cmr {
+        match *self {}
+    }
+
     fn encode<W: encode::BitWrite>(&self, _: &mut W) -> io::Result<usize> {
         match *self {}
     }
