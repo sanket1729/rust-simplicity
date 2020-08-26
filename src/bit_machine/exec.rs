@@ -249,7 +249,7 @@ impl BitMachine {
     }
 
     /// Execute a program in the Bit Machine
-    pub fn exec<Ext: extension::Jet>(
+    pub fn exec<Ext: extension::Jet + std::fmt::Debug>(
         &mut self,
         program: &Program<Ext>,
         txenv: &Ext::TxEnv,
@@ -337,9 +337,11 @@ impl BitMachine {
                     // 3. Delete the two frames we created, which have both moved to the read stack
                     call_stack.push(CallStack::DropFrame);
                     call_stack.push(CallStack::DropFrame);
+                    let b_size = s_target_size - program.nodes[ip.index - t].source_ty.bit_width();
+                    // Back not required since we are dropping the frame anyways
+                    // call_stack.push(CallStack::Back(b_size));
                     // 2. Copy the first half of `s`s output directly then execute `t` on the second half
                     call_stack.push(CallStack::Goto(ip.index - t));
-                    let b_size = s_target_size - program.nodes[ip.index - t].source_ty.bit_width();
                     call_stack.push(CallStack::CopyFwd(b_size));
                     // 1. Execute `s` then move the write frame to the read frame for `t`
                     call_stack.push(CallStack::MoveFrame);
