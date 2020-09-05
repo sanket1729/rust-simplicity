@@ -18,20 +18,14 @@
 //! rust-simplicity. This file has additional data-structures for
 //! simplicity transactions
 
+use crate::bit_machine::SimplicityEncodable;
 use crate::cmr::Cmr;
+use crate::core::SimplicityHash;
 use crate::exec;
 use bitcoin_hashes::{sha256, Hash, HashEngine};
 use byteorder::{BigEndian, LittleEndian, WriteBytesExt};
 use elements::confidential::{Asset, Nonce, Value};
 use elements::{confidential, AssetIssuance};
-
-/// Helper trait for writing various components of
-/// Simplicity transactions(Assets, Values) into bit machine.
-pub(in crate::extension::elements) trait SimplicityEncodable {
-    // write the simplicity encoding of `self` on bitmachine
-    // at the current write cursor.
-    fn simplicity_encode(self, mac: &mut exec::BitMachine);
-}
 
 /// A simplicity representation of elements confidential asset is then:
 /// (prefix, asset) = ((is_explicit, is_odd),[u8; 32])
@@ -139,12 +133,6 @@ impl SimplicityEncodable for confidential::Nonce {
             }
         }
     }
-}
-/// Simplicity has a different logic for computing the transactoin input and output
-/// digest. This trait defines the method for computation of such digests.
-pub(super) trait SimplicityHash {
-    /// Add the hash of current tx component
-    fn simplicity_hash(&self, eng: &mut sha256::HashEngine);
 }
 
 impl SimplicityHash for confidential::Asset {
